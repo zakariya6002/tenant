@@ -95,10 +95,10 @@ class TenantController extends Controller
         return redirect()->route('tenants.index');
     }
     public function invitation(User $user){
-        if (request()->hasValidSignature() || $user->password != 'secret'){
+        if (!request()->hasValidSignature() || $user->password != 'secret'){
             abort(401);
         }
         auth()->login($user);
-        return redirect()->route('tenants.index');
+        return redirect()->route('dashboard');
     }
 }

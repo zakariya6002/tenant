@@ -2,6 +2,7 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\TenantController;
+use App\Http\Controllers\SetPasswordController;
 
 /*
 |--------------------------------------------------------------------------
@@ -18,10 +19,14 @@ Route::get('/', function () {
     return view('welcome');
 });
 
-Route::resource('tenants',TenantController::class);
 
-Route::middleware(['auth:sanctum', 'verified'])->get('/dashboard', function () {
-    return view('dashboard');
-})->name('dashboard');
+Route::group(['middleware' => 'auth'], function () {
+    Route::resource('tenants',TenantController::class);
+    Route::get('/dashboard', function(){
+        return view('dashboard');
+    })->name('dashboard');
+    Route::get('setpassword',[SetPasswordController::class,'create'])->name('setpassword');
+    Route::post('setpassword',[SetPasswordController::class,'store'])->name('setpassword.store');
 
+});
 Route::get('invitation/{user}',[TenantController::class,'invitation'])->name('invitation');
